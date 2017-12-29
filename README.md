@@ -56,6 +56,9 @@ CREATE TABLE test1 (
 INSERT INTO test1 (space, key, value) VALUES ('foo', 'blah', 'meh');
 
 UPDATE test1 SET value = 'profit!' WHERE space = 'foo' AND key = 'blah';
+
+put all the cql file under this location : { "/db/migration/cassandra" } - 
+under resources folder create db-> migration->cassandra folder.
 ```
 
 ### Java classes
@@ -79,19 +82,22 @@ public class V3_0__Third implements JavaMigration {
 ### Java API
 Example:
 ```
-String[] scriptsLocations = {"migration/cassandra"};
-
-Keyspace keyspace = new Keyspace();
-keyspace.setName(CASSANDRA__KEYSPACE);
-keyspace.getCluster().setContactpoints(CASSANDRA_CONTACT_POINT);
-keyspace.getCluster().setPort(CASSANDRA_PORT);
-keyspace.getCluster().setUsername(CASSANDRA_USERNAME);
-keyspace.getCluster().setPassword(CASSANDRA_PASSWORD);
-
-CassandraMigration cm = new CassandraMigration();
-cm.getConfigs().setScriptsLocations(scriptsLocations);
-cm.setKeyspace(keyspace);
-cm.migrate();
+com.contrastsecurity.cassandra.migration.utils.MigrationScriptEntryPoint 
+class has main method to run the migration job.
+cql file must be in following format.
+Start with "V" then version number like V1 then _ , V1_, then next version number 1
+V1_1 then '__' , V1_1__ , then file name.cql
+complete example : V1_1__filename.cql 
+ provide following values under ENV:
+     "sunbird_cassandra_port" : cassandra port number
+	 "sunbird_cassandra_host"; : list of host comma separatd Example "127.0.0.1,127.0.0.2" or "127.0.0.1" in case on only one host
+     "sunbird_cassandra_username"; : optional if it has userName
+	 "sunbird_cassandra_password"; : optioan if it has password
+	 "sunbird_cassandra_keyspace"; : provide the keyspace name against which you want to run migration.
+	 // key space should be created before runing job.
+  
+     // run maven with command :
+      mvn exec:java
 ```
 
 ### Command line

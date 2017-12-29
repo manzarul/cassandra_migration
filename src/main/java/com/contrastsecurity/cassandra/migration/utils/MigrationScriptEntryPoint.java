@@ -8,7 +8,7 @@ import com.contrastsecurity.cassandra.migration.logging.LogFactory;
 public class MigrationScriptEntryPoint {
 
 	private static final Log LOG = LogFactory.getLog(CassandraMigration.class);
-	private static final String CASSANDRA__KEYSPACE = "sunbird";//"cassandra_migration_test";
+	private static  String CASSANDRA__KEYSPACE = "cassandra_migration_test";
 	private static int CASSANDRA_PORT = 9042;
 	private static String[] CASSANDRA_HOST;
 	private static String CASSANDRA_USER_NAME;
@@ -17,6 +17,7 @@ public class MigrationScriptEntryPoint {
 	private static final String SUNBIRD_CASSANDRA_HOST = "sunbird_cassandra_host";
 	private static final String SUNBIRD_CASSANDRA_USERNAME = "sunbird_cassandra_username";
 	private static final String SUNBIRD_CASSANDRA_PASSWORD = "sunbird_cassandra_password";
+	private static final String SUNBIRD_CASSANDRA_KEYSPACE = "sunbird_cassandra_keyspace";
 	private static final String[] SCRIPT_LOCATIONS = { "db/migration/cassandra" };
 
 	/**
@@ -52,6 +53,7 @@ public class MigrationScriptEntryPoint {
 		String port = System.getenv(SUNBIRD_CASSANDRA_PORT);
 		String userName = System.getenv(SUNBIRD_CASSANDRA_USERNAME);
 		String password = System.getenv(SUNBIRD_CASSANDRA_PASSWORD);
+		 String keyspace = System.getenv(SUNBIRD_CASSANDRA_KEYSPACE);
 		if (host == null || port == null || "".equals(host.trim()) || "".equals(port.trim())) {
 			Exception e = new Exception("Cassandra configuration values are not set");
 			LOG.error("Exception occured during migration", e);
@@ -61,6 +63,9 @@ public class MigrationScriptEntryPoint {
 			CASSANDRA_PORT = Integer.parseInt(port.split(",")[0]);
 			CASSANDRA_USER_NAME = userName;
 			CASSANDRA_PASSWORD = password;
+			if (keyspace != null && !"".equals(keyspace.trim())) {
+				CASSANDRA__KEYSPACE = keyspace;
+			}
 		}
 	}
 
