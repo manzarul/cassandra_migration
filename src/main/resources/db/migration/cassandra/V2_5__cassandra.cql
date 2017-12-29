@@ -1,0 +1,4 @@
+/**
+test comment
+**/
+INSERT INTO contents (id, title, message,created) VALUES (123444555335, 'test', 'testmsg','2017-12-29 12:34:58');
